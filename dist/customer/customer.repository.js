@@ -10,23 +10,23 @@ exports.CustomerRepository = void 0;
 const common_1 = require("@nestjs/common");
 const redis_1 = require("../config/redis");
 let CustomerRepository = class CustomerRepository {
+    constructor() {
+        this.redis = new redis_1.RedisConfig();
+    }
     async save(customer) {
-        await (0, redis_1.setRedis)(`customer:${customer.id}`, JSON.stringify(customer));
+        await this.redis.setCache(`customer:${customer.id}`, JSON.stringify(customer));
     }
     async update(id, dataCustomer) {
-        const customer = await (0, redis_1.getRedis)(`customer:${id}`);
-        if (!customer) {
-            throw new common_1.NotFoundException('cliente inexistente.');
-        }
-        const alreadExists = await (0, redis_1.getRedis)(`customer:${dataCustomer.id}`);
+        await this.getCustomerById(id);
+        const alreadExists = await this.redis.getCache(`customer:${dataCustomer.id}`);
         if (alreadExists !== null) {
-            throw new common_1.ConflictException('conflito de ID');
+            throw new common_1.ConflictException('conflito de ID.');
         }
-        await (0, redis_1.setRedis)(`customer:${id}`, JSON.stringify(dataCustomer));
-        return await (0, redis_1.getRedis)(`customer:${id}`);
+        await this.redis.setCache(`customer:${id}`, JSON.stringify(dataCustomer));
+        return await this.redis.getCache(`customer:${id}`);
     }
     async getCustomerById(id) {
-        const customer = await (0, redis_1.getRedis)(`customer:${id}`);
+        const customer = await this.redis.getCache(`customer:${id}`);
         if (!customer) {
             throw new common_1.NotFoundException('cliente inexistente.');
         }

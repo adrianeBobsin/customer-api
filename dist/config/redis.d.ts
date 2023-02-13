@@ -1,6 +1,5 @@
-import Redis from 'ioredis';
-declare const redisClient: Redis;
-declare function getRedis(value: string): any;
-declare function setRedis(key: string, value: string): any;
-declare function delRedis(key: string): any;
-export { redisClient, getRedis, setRedis, delRedis };
+export declare class RedisConfig {
+    getCache(value: string): Promise<any>;
+    setCache(key: string, value: string): Promise<any>;
+    delCache(key: string): Promise<any>;
+}

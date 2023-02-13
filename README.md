@@ -1,11 +1,11 @@
-# Customer-api
+# Customer API
 ## Description
 
 RESTful API que suporta as seguintes operações:
-● Salvar um cliente novo
-● Atualizar um cliente existente
-● Buscar um cliente por ID
-● Autenticação
+- Salvar um cliente novo
+- Atualizar um cliente existente
+- Buscar um cliente por ID
+- Autenticação
 
 ## Installation
 
@@ -22,6 +22,10 @@ $ docker run -d -p 6379:6379 redis
 ```bash
 # development
 $ npm run start
+
+OU
+
+$ docker compose up -d
 ```
 
 ## Test

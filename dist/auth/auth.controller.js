@@ -14,6 +14,9 @@ const common_1 = require("@nestjs/common");
 const axios_1 = require("axios");
 const redis_1 = require("../config/redis");
 let AuthController = class AuthController {
+    constructor() {
+        this.redis = new redis_1.RedisConfig();
+    }
     async generateToken() {
         const data = new URLSearchParams({
             grant_type: 'client_credentials',
@@ -21,18 +24,18 @@ let AuthController = class AuthController {
             client_secret: '453000f7-47a0-4489-bc47-891c742650e2',
             username: 'adrianebobsin@gmail.com',
             password: 'YWRyaWFuZWJvYnNpbkBnbWFpbC5jb20',
-            scope: 'openid',
+            scope: 'openid'
         });
         let token;
         try {
             token = await axios_1.default.post('https://accounts.seguros.vitta.com.br/auth/realms/careers/protocol/openid-connect/token', data, {
-                headers: { 'content-type': 'application/x-www-form-urlencoded' },
+                headers: { 'content-type': 'application/x-www-form-urlencoded' }
             });
         }
         catch (e) {
             throw new common_1.BadGatewayException('sso indisponível.');
         }
-        await (0, redis_1.setRedis)('token', token.data.access_token);
+        await this.redis.setCache('token', token.data.access_token);
         return JSON.stringify(token.data);
     }
 };

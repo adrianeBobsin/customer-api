@@ -15,18 +15,15 @@ class UpdateCustomerDTO {
 }
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsUUID)(),
     __metadata("design:type", String)
 ], UpdateCustomerDTO.prototype, "id", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
 ], UpdateCustomerDTO.prototype, "document", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], UpdateCustomerDTO.prototype, "name", void 0);
 exports.UpdateCustomerDTO = UpdateCustomerDTO;

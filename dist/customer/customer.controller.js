@@ -22,8 +22,9 @@ const listCustomer_dto_1 = require("./dto/listCustomer.dto");
 const updateCustomer_dto_1 = require("./dto/updateCustomer.dto");
 const redis_1 = require("../config/redis");
 let CustomerController = class CustomerController {
-    constructor(customerRepository) {
+    constructor(customerRepository, redis) {
         this.customerRepository = customerRepository;
+        this.redis = redis;
     }
     async createCustomer(customerData, headers) {
         const customerEntity = new customer_entity_1.CustomerEntity();
@@ -33,38 +34,24 @@ let CustomerController = class CustomerController {
         this.customerRepository.save(customerEntity);
         return {
             customer: new listCustomer_dto_1.ListCustomerDTO(customerEntity.id, customerEntity.name),
-            message: 'Customer created successfully.',
+            message: 'cliente criado com sucesso.'
         };
     }
     async getCustomerById(id, headers) {
-        var _a;
-        const tokenRedis = await (0, redis_1.getRedis)('token');
-        const tokenRequest = (_a = headers === null || headers === void 0 ? void 0 : headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (tokenRedis == null ||
-            tokenRequest == null ||
-            tokenRequest.localeCompare(tokenRedis) !== 0) {
-            throw new common_1.UnauthorizedException();
-        }
+        await this.tokenValidation(headers.authorization);
         const customer = await this.customerRepository.getCustomerById(id);
         return customer;
     }
     async updateCustomer(id, dataCustomer, headers) {
-        var _a;
-        const tokenRedis = await (0, redis_1.getRedis)('token');
-        const tokenRequest = (_a = headers === null || headers === void 0 ? void 0 : headers.authorization) === null || _a === void 0 ? void 0 : _a.split(' ')[1];
-        if (tokenRedis == null ||
-            tokenRequest == null ||
-            tokenRequest.localeCompare(tokenRedis) !== 0) {
-            throw new common_1.UnauthorizedException();
-        }
+        await this.tokenValidation(headers.authorization);
         const updatedCustomer = await this.customerRepository.update(id, dataCustomer);
         return {
             customer: updatedCustomer,
-            message: 'Customer updated successfully.',
+            message: 'cliente atualizada com sucesso.'
         };
     }
     async tokenValidation(token) {
-        const tokenRedis = await (0, redis_1.getRedis)('token');
+        const tokenRedis = await this.redis.getCache('token');
         const tokenRequest = token === null || token === void 0 ? void 0 : token.split(' ')[1];
         if (tokenRedis == null ||
             tokenRequest == null ||
@@ -100,7 +87,7 @@ __decorate([
 ], CustomerController.prototype, "updateCustomer", null);
 CustomerController = __decorate([
     (0, common_1.Controller)('/customers'),
-    __metadata("design:paramtypes", [customer_repository_1.CustomerRepository])
+    __metadata("design:paramtypes", [customer_repository_1.CustomerRepository, redis_1.RedisConfig])
 ], CustomerController);
 exports.CustomerController = CustomerController;
 //# sourceMappingURL=customer.controller.js.map

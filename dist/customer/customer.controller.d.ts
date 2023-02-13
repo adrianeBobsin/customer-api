@@ -2,9 +2,11 @@ import { CustomerRepository } from './customer.repository';
 import { CreateCustomerDTO } from './dto/createCustomer.dto';
 import { ListCustomerDTO } from './dto/listCustomer.dto';
 import { UpdateCustomerDTO } from './dto/updateCustomer.dto';
+import { RedisConfig } from 'src/config/redis';
 export declare class CustomerController {
     private customerRepository;
-    constructor(customerRepository: CustomerRepository);
+    private redis;
+    constructor(customerRepository: CustomerRepository, redis: RedisConfig);
     createCustomer(customerData: CreateCustomerDTO, headers: Record<string, string>): Promise<{
         customer: ListCustomerDTO;
         message: string;
